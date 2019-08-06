@@ -119,13 +119,14 @@ class HttpSession(requests.Session):
         request_meta["response_time"] = (time.time() - request_meta["start_time"]) * 1000
         
     
-        request_meta["name"] = name or response.url
+        # response.url might be null but request.url wont
+        request_meta["name"] = name or response.request.url
 
         # loop through all the 
         for redirect_response in response.history:
             events.request_success.fire(
                     request_type=redirect_response.request.method,
-                    name=redirect_response.url,
+                    name=redirect_response.url or '<unknown>',
                     response_time=redirect_response.elapsed.total_seconds()*1000,
                     response_length= len(response.content or b""),
                     session_info=self.session_info,
