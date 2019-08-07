@@ -122,7 +122,7 @@ class HttpSession(requests.Session):
         # response.url might be null but request.url wont
         request_meta["name"] = name or response.request.url
 
-        # loop through all the 
+        # loop through all redirects and forward data to hooks
         for redirect_response in response.history:
             events.request_success.fire(
                     request_type=redirect_response.request.method,
