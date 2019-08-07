@@ -146,31 +146,31 @@ class StatsEntry(object):
     Represents a single stats entry (name and method)
     """
     
-    name = None
+    #name = None
     """ Name (URL) of this stats entry """
     
-    method = None
+    #method = None
     """ Method (GET, POST, PUT, etc.) """
     
-    num_requests = None
+    #num_requests = None
     """ The number of requests made """
     
-    num_failures = None
+    #num_failures = None
     """ Number of failed request """
     
-    total_response_time = None
+    #total_response_time = None
     """ Total sum of the response times """
     
-    min_response_time = None
+    #min_response_time = None
     """ Minimum response time """
     
-    max_response_time = None
+    #max_response_time = None
     """ Maximum response time """
     
-    num_reqs_per_sec = None
+    #num_reqs_per_sec = None
     """ A {second => request_count} dict that holds the number of requests made per second """
     
-    response_times = None
+    #response_times = None
     """
     A {response_time => count} dict that holds the response time distribution of all
     the requests.
@@ -181,7 +181,7 @@ class StatsEntry(object):
     This dict is used to calculate the median and percentile response times.
     """
     
-    use_response_times_cache = False
+    #use_response_times_cache = False
     """
     If set to True, the copy of the response_time dict will be stored in response_times_cache 
     every second, and kept for 20 seconds (by default, will be CURRENT_RESPONSE_TIME_PERCENTILE_WINDOW + 10). 
@@ -189,20 +189,24 @@ class StatsEntry(object):
     time percentiles.
     """
     
-    response_times_cache = None
+    #response_times_cache = None
     """
     If use_response_times_cache is set to True, this will be a {timestamp => CachedResponseTimes()} 
     OrderedDict that holds a copy of the response_times dict for each of the last 20 seconds.
     """
     
-    total_content_length = None
+    #total_content_length = None
     """ The sum of the content length of all the requests for this entry """
     
-    start_time = None
+    #start_time = None
     """ Time of the first request for this entry """
     
-    last_request_timestamp = None
+    #last_request_timestamp = None
     """ Time of the last request for this entry """
+
+    __slots__ = ['name', 'method', 'num_requests', 'num_failures', 'total_response_time', 'min_response_time',
+        'max_response_time', 'num_reqs_per_sec', 'response_times', 'use_response_times_cache',
+        'response_times_cache', 'total_content_length', 'start_time', 'last_request_timestamp', 'stats']
     
     def __init__(self, stats, name, method, use_response_times_cache=False):
         self.stats = stats
