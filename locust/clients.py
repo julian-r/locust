@@ -131,6 +131,7 @@ class HttpSession(requests.Session):
                     response_length= len(response.content or b""),
                     session_info=self.session_info,
                     status_code=redirect_response.status_code,
+                    response_url=redirect_response.request.url,
                 )
         
         # get the length of the content, but if the argument stream is set to True, we take
@@ -154,6 +155,7 @@ class HttpSession(requests.Session):
                     exception=e,
                     session_info=self.session_info,
                     status_code=response.status_code,
+                    response_url=response.request.url,
                 )
             else:
                 events.request_success.fire(
@@ -163,6 +165,7 @@ class HttpSession(requests.Session):
                     response_length=request_meta["content_size"],
                     session_info=self.session_info,
                     status_code=response.status_code,
+                    response_url=response.request.url,
                 )
             return response
     
@@ -241,6 +244,7 @@ class ResponseContextManager(LocustResponse):
             response_length=self.locust_request_meta["content_size"],
             session_info=self.session_info,
             status_code=self.status_code,
+            response_url=self.request.url,
         )
         self._is_reported = True
     
@@ -266,6 +270,7 @@ class ResponseContextManager(LocustResponse):
             response_time=self.locust_request_meta["response_time"],
             exception=exc,
             session_info=self.session_info,
-            status_code=self.status_code
+            status_code=self.status_code,
+            response_url=self.request.url,
         )
         self._is_reported = True
