@@ -3,6 +3,7 @@ import time
 from collections import namedtuple, OrderedDict
 from copy import copy
 from itertools import chain
+from urllib.parse import urlparse
 
 import gevent
 import six
@@ -109,10 +110,11 @@ class RequestStats(object):
         """
         Retrieve a StatsEntry instance by name and method
         """
-        entry = self.entries.get((name, method))
+        url_wo_query = urlparse(name)._replace(query='', fragment='').geturl()
+        entry = self.entries.get((url_wo_query, method))
         if not entry:
-            entry = StatsEntry(self, name, method)
-            self.entries[(name, method)] = entry
+            entry = StatsEntry(self, url_wo_query, method)
+            self.entries[(url_wo_query, method)] = entry
         return entry
     
     def reset_all(self):
