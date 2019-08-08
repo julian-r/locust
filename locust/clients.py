@@ -117,13 +117,14 @@ class HttpSession(requests.Session):
         
         # record the consumed time
         request_meta["response_time"] = (time.time() - request_meta["start_time"]) * 1000
-        
     
         # response.url might be null but request.url wont
         request_meta["name"] = name or response.request.url
 
         # loop through all redirects and forward data to hooks
+        redirects_total_time = 0
         for redirect_response in response.history:
+            redirects_total_time += redirect_response.elapsed.total_seconds() * 1000
             events.request_success.fire(
                     request_type=redirect_response.request.method,
                     name=redirect_response.url or '<unknown>',
@@ -133,7 +134,10 @@ class HttpSession(requests.Session):
                     status_code=redirect_response.status_code,
                     response_url=redirect_response.request.url,
                 )
-        
+
+        # reduce response time to time of last redirect to final resource
+        request_meta["response_time"] -= redirects_total_time
+
         # get the length of the content, but if the argument stream is set to True, we take
         # the size from the content-length header, in order to not trigger fetching of the body
         if kwargs.get("stream", False):
