@@ -141,7 +141,7 @@ class RequestStats(object):
     
     def serialize_errors(self):
         return dict([(k, e.to_dict()) for k, e in six.iteritems(self.errors)])
-        
+
 
 class StatsEntry(object):
     """
