@@ -220,6 +220,8 @@ class ResponseContextManager(LocustResponse):
         if exc:
             if isinstance(value, ResponseError):
                 self.failure(value)
+            elif isinstance(value, requests.exceptions.RequestException):
+                self.failure(value)
             else:
                 return False
         else:
